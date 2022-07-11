@@ -16,7 +16,7 @@ type GithubUserData = {
   followers: number;
 };
 
-const CepSearch = () => {
+const UserSearch = () => {
   const [formData, setFormData] = useState<FormData>({ username: '' });
   const [githubUserData, setGithubUserData] = useState<GithubUserData>();
 
@@ -72,4 +72,4 @@ const CepSearch = () => {
   );
 };
 
-export default CepSearch;
+export default UserSearch;
