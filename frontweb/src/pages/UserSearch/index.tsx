@@ -3,6 +3,7 @@ import './styles.css';
 import ResultCard from 'components/ResultCard';
 import { useState } from 'react';
 import axios from 'axios';
+import UserDetailsLoader from 'components/ResultCard/UserDetailsLoader';
 
 type FormData = {
   username: string;
@@ -19,6 +20,7 @@ type GithubUserData = {
 const UserSearch = () => {
   const [formData, setFormData] = useState<FormData>({ username: '' });
   const [githubUserData, setGithubUserData] = useState<GithubUserData>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
@@ -30,6 +32,7 @@ const UserSearch = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    setIsLoading(true);
     axios
       .get(`https://api.github.com/users/${formData.username}`)
       .then((response) => {
@@ -39,6 +42,9 @@ const UserSearch = () => {
       .catch((error) => {
         setGithubUserData(undefined);
         console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -63,10 +69,16 @@ const UserSearch = () => {
         </form>
       </div>
 
-      {githubUserData && (
+      {isLoading ? (
         <div className="container">
-          <ResultCard userData={githubUserData} />
+          <UserDetailsLoader />
         </div>
+      ) : (
+        githubUserData && (
+          <div className="container">
+            <ResultCard userData={githubUserData} />
+          </div>
+        )
       )}
     </div>
   );
